@@ -65,7 +65,11 @@ public class ScanService extends Service {
     private JSONObject wifiResults = new JSONObject();
 
     private String familyName = "";
-    private String locationName = "";
+
+    // change locationName to variables, x and y.
+    private String locationX = "";
+    private String locationY = "";
+
     private String deviceName = "";
     private String serverAddress = "";
     private boolean allowGPS = false;
@@ -103,7 +107,12 @@ public class ScanService extends Service {
         super.onStartCommand(intent, flags, startId);
         deviceName = intent.getStringExtra("deviceName");
         familyName = intent.getStringExtra("familyName");
-        locationName = intent.getStringExtra("locationName");
+
+        // change locationName
+        locationX = intent.getStringExtra("locationX");
+        locationY = intent.getStringExtra("locationY");
+
+
         serverAddress = intent.getStringExtra("serverAddress");
         allowGPS = intent.getBooleanExtra("allowGPS", false);
 
@@ -293,7 +302,11 @@ public class ScanService extends Service {
             String URL = serverAddress + "/data";
             jsonBody.put("f", familyName);
             jsonBody.put("d", deviceName);
-            jsonBody.put("l", locationName);
+
+            // change locationName to variables, x and y.
+            jsonBody.put("lx", locationX);
+            jsonBody.put("ly", locationY);
+
             jsonBody.put("t", System.currentTimeMillis());
             JSONObject sensors = new JSONObject();
             sensors.put("bluetooth", bluetoothResults);

@@ -24,7 +24,11 @@ public class AlarmReceiverLife extends BroadcastReceiver {
         // get data
         String familyName = intent.getStringExtra("familyName");
         String deviceName = intent.getStringExtra("deviceName");
-        String locationName = intent.getStringExtra("locationName");
+
+        // change locationName
+        String locationX = intent.getStringExtra("locationX");
+        String locationY = intent.getStringExtra("locationY");
+
         String serverAddress = intent.getStringExtra("serverAddress");
         boolean allowGPS = intent.getBooleanExtra("allowGPS",false);
         Log.d(TAG,"familyName: "+ familyName);
@@ -37,7 +41,12 @@ public class AlarmReceiverLife extends BroadcastReceiver {
         Intent scanService = new Intent(context, ScanService.class);
         scanService.putExtra("familyName",familyName);
         scanService.putExtra("deviceName",deviceName);
-        scanService.putExtra("locationName",locationName);
+
+        // change locationName
+        scanService.putExtra("locationX",locationX);
+        scanService.putExtra("locationY",locationY);
+
+
         scanService.putExtra("serverAddress",serverAddress);
         scanService.putExtra("allowGPS",allowGPS);
         try {

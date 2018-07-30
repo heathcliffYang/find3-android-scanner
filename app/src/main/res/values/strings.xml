@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FIND3 Scanner</string>
+    <string name="buttonReturn">ButtonReturn</string>
 </resources>

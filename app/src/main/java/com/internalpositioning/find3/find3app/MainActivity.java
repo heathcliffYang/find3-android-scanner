@@ -30,6 +30,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -49,11 +50,19 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
 public class MainActivity extends AppCompatActivity {
 
     // logging
     private final String TAG = "MainActivity";
 
+    // add button
+    // private Button buttonLocation;
+    // private Button buttonReturn;
+
+    public String locationX = "";
+    public String locationY = "";
 
     // background manager
     private PendingIntent recurringLl24 = null;
@@ -136,10 +145,13 @@ public class MainActivity extends AppCompatActivity {
         checkBoxAllowGPS.setChecked(sharedPref.getBoolean("allowGPS",false));
 
 
-        AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.locationName);
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, autocompleteLocations);
-        textView.setAdapter(adapter);
+        // change locationName: AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.locationName);
+
+//        ArrayAdapter<String> adapter =
+//                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, autocompleteLocations);
+
+        // change locationName's textView:
+        // textView.setAdapter(adapter);
 
 
         ToggleButton toggleButtonTracking = (ToggleButton) findViewById(R.id.toggleScanType);
@@ -191,14 +203,31 @@ public class MainActivity extends AppCompatActivity {
                     }
                     boolean allowGPS = ((CheckBox) findViewById(R.id.allowGPS)).isChecked();
                     Log.d(TAG,"allowGPS is checked: "+allowGPS);
-                    String locationName = ((EditText) findViewById(R.id.locationName)).getText().toString().toLowerCase();
+
+                    // change locationName to locationX and locationY
+                    // String locationName = ((EditText) findViewById(R.id.locationName)).getText().toString().toLowerCase();
+
 
                     CompoundButton trackingButton = (CompoundButton) findViewById(R.id.toggleScanType);
                     if (trackingButton.isChecked() == false) {
-                        locationName = "";
+                        // tracking mode
+
+                        // change locationName
+                        // locationName = "";
+                        locationX = "";
+                        locationY = "";
+
+                        // TODO
                     } else {
-                        if (locationName.equals("")) {
+                        // learning mode, disable to check if location name is empty or not.
+                        /*if (locationName.equals("")) {
                             rssi_msg.setText("location name cannot be empty when learning");
+                            buttonView.toggle();
+                            return;
+                        }*/
+
+                        if (locationX.equals("") || locationY.equals("")) {
+                            rssi_msg.setText("location name cannot be empty when learning and point the place again.");
                             buttonView.toggle();
                             return;
                         }
@@ -209,7 +238,11 @@ public class MainActivity extends AppCompatActivity {
                     editor.putString("familyName", familyName);
                     editor.putString("deviceName", deviceName);
                     editor.putString("serverAddress", serverAddress);
-                    editor.putString("locationName", locationName);
+                    // postpone submit the location name
+                    // editor.putString("locationName", locationName);
+                    editor.putString("locationX", locationX);
+                    editor.putString("locationY", locationY);
+
                     editor.putBoolean("allowGPS",allowGPS);
                     editor.commit();
 
@@ -220,7 +253,13 @@ public class MainActivity extends AppCompatActivity {
                     ll24.putExtra("familyName", familyName);
                     ll24.putExtra("deviceName", deviceName);
                     ll24.putExtra("serverAddress", serverAddress);
-                    ll24.putExtra("locationName", locationName);
+
+                    // change locationName to x,y
+                    // ll24.putExtra("locationName", locationName);
+                    ll24.putExtra("locationX", locationX);
+                    ll24.putExtra("locationY", locationY);
+
+
                     ll24.putExtra("allowGPS",allowGPS);
                     recurringLl24 = PendingIntent.getBroadcast(MainActivity.this, 0, ll24, PendingIntent.FLAG_CANCEL_CURRENT);
                     alarms = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -231,8 +270,8 @@ public class MainActivity extends AppCompatActivity {
                     connectWebSocket();
 
                     String scanningMessage = "Scanning for " + familyName + "/" + deviceName;
-                    if (locationName.equals("") == false) {
-                        scanningMessage += " at " + locationName;
+                    if (locationX.equals("") == false || locationY.equals("") == false) {
+                        scanningMessage += " at " + locationX + ", " + locationY;
                     }
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(MainActivity.this)
                             .setSmallIcon(R.drawable.ic_stat_name)
@@ -269,6 +308,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    static final int PICK_CONTACT_REQUEST = 1;  // The request code
+
+    /** Called when the user taps the buttonLocation button */
+    public void mapTouch(View view) {
+        // Do something in response to button
+        Intent intent = new Intent(this, DisplayMapActivity.class);
+
+        // String message = locationX + "," + locationY;
+        // intent.putExtra(EXTRA_MESSAGE, message);
+
+        startActivityForResult(intent, PICK_CONTACT_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == PICK_CONTACT_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                locationX = data.getStringExtra(DisplayMapActivity.EXTRA_MESSAGE1);
+                locationY = data.getStringExtra(DisplayMapActivity.EXTRA_MESSAGE2);
+                TextView textView = (TextView) findViewById(R.id.coordinateXY);
+                textView.setText(locationX+","+locationY);
+            }
+        }
+    }
+
     private void connectWebSocket() {
         URI uri;
         try {
@@ -303,7 +372,12 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject bluetooth = null;
                         JSONObject wifi = null;
                         String deviceName = "";
-                        String locationName = "";
+
+                        // change locationName to x, y
+                        // String locationName = "";
+                        String locationX = "";
+                        String locationY = "";
+
                         String familyName = "";
                         try {
                             json = new JSONObject(message);
@@ -321,7 +395,8 @@ public class MainActivity extends AppCompatActivity {
                             sensors = new JSONObject(fingerprint.get("s").toString());
                             deviceName = fingerprint.get("d").toString();
                             familyName = fingerprint.get("f").toString();
-                            locationName = fingerprint.get("l").toString();
+                            locationX = fingerprint.get("lx").toString();
+                            locationY = fingerprint.get("ly").toString();
                             Log.d("Websocket", "sensors: " + sensors);
                         } catch (Exception e) {
                             Log.d("Websocket", "json error: " + e.toString());
@@ -356,8 +431,8 @@ public class MainActivity extends AppCompatActivity {
 //                        String message = sdf.format(resultdate) + ": " + bluetoothPoints.toString() + " bluetooth and " + wifiPoints.toString() + " wifi points inserted for " + familyName + "/" + deviceName;
                         String message = "1 second ago: added " + bluetoothPoints.toString() + " bluetooth and " + wifiPoints.toString() + " wifi points for " + familyName + "/" + deviceName;
                         oneSecondTimer.resetCounter();
-                        if (locationName.equals("") == false) {
-                            message += " at " + locationName;
+                        if (locationX.equals("") == false || locationY.equals("") == false) {
+                            message += " at " + locationX + ", " + locationY;
                         }
                         TextView rssi_msg = (TextView) findViewById(R.id.textOutput);
                         Log.d("Websocket", message);
@@ -386,8 +461,5 @@ public class MainActivity extends AppCompatActivity {
         };
         mWebSocketClient.connect();
     }
-
-
-
 
 }

@@ -125,13 +125,20 @@
                 android:layout_height="wrap_content"
                 android:text="Location (optional):" />
 
-            <AutoCompleteTextView
-                android:id="@+id/locationName"
-                android:layout_width="220dp"
+            <Button
+                android:id="@+id/buttonLocation"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="center"
-                android:inputType="textUri|textPersonName" />
+                android:layout_weight="0"
+                android:onClick="mapTouch"
+                android:text="Point X,Y" />
+
+            <TextView
+                android:id="@+id/coordinateXY"
+                android:layout_width="131dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0" />
+
         </LinearLayout>
 
 
@@ -201,4 +208,5 @@
     </LinearLayout>
     </TableLayout>
     </ScrollView>
+
 </android.support.constraint.ConstraintLayout>
