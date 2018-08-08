@@ -26,6 +26,7 @@ public class AlarmReceiverLife extends BroadcastReceiver {
         String deviceName = intent.getStringExtra("deviceName");
 
         // change locationName
+        String locationName = intent.getStringExtra("locationName");
         String locationX = intent.getStringExtra("locationX");
         String locationY = intent.getStringExtra("locationY");
 
@@ -43,6 +44,7 @@ public class AlarmReceiverLife extends BroadcastReceiver {
         scanService.putExtra("deviceName",deviceName);
 
         // change locationName
+        scanService.putExtra("locationName",locationName);
         scanService.putExtra("locationX",locationX);
         scanService.putExtra("locationY",locationY);
 

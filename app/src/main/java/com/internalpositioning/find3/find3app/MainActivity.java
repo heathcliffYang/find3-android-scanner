@@ -145,13 +145,15 @@ public class MainActivity extends AppCompatActivity {
         checkBoxAllowGPS.setChecked(sharedPref.getBoolean("allowGPS",false));
 
 
-        // change locationName: AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.locationName);
+        // change locationName:
 
-//        ArrayAdapter<String> adapter =
-//                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, autocompleteLocations);
+        AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.locationName);
+
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, autocompleteLocations);
 
         // change locationName's textView:
-        // textView.setAdapter(adapter);
+        textView.setAdapter(adapter);
 
 
         ToggleButton toggleButtonTracking = (ToggleButton) findViewById(R.id.toggleScanType);
@@ -205,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG,"allowGPS is checked: "+allowGPS);
 
                     // change locationName to locationX and locationY
-                    // String locationName = ((EditText) findViewById(R.id.locationName)).getText().toString().toLowerCase();
+                    String locationName = ((EditText) findViewById(R.id.locationName)).getText().toString().toLowerCase();
 
 
                     CompoundButton trackingButton = (CompoundButton) findViewById(R.id.toggleScanType);
@@ -213,18 +215,18 @@ public class MainActivity extends AppCompatActivity {
                         // tracking mode
 
                         // change locationName
-                        // locationName = "";
+                        locationName = "";
                         locationX = "";
                         locationY = "";
 
                         // TODO
                     } else {
                         // learning mode, disable to check if location name is empty or not.
-                        /*if (locationName.equals("")) {
+                        if (locationName.equals("")) {
                             rssi_msg.setText("location name cannot be empty when learning");
                             buttonView.toggle();
                             return;
-                        }*/
+                        }
 
                         if (locationX.equals("") || locationY.equals("")) {
                             rssi_msg.setText("location name cannot be empty when learning and point the place again.");
@@ -239,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                     editor.putString("deviceName", deviceName);
                     editor.putString("serverAddress", serverAddress);
                     // postpone submit the location name
-                    // editor.putString("locationName", locationName);
+                    editor.putString("locationName", locationName);
                     editor.putString("locationX", locationX);
                     editor.putString("locationY", locationY);
 
@@ -255,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                     ll24.putExtra("serverAddress", serverAddress);
 
                     // change locationName to x,y
-                    // ll24.putExtra("locationName", locationName);
+                    ll24.putExtra("locationName", locationName);
                     ll24.putExtra("locationX", locationX);
                     ll24.putExtra("locationY", locationY);
 
@@ -374,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
                         String deviceName = "";
 
                         // change locationName to x, y
-                        // String locationName = "";
+                        String locationName = "";
                         String locationX = "";
                         String locationY = "";
 

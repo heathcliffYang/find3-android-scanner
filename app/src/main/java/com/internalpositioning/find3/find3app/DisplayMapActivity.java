@@ -29,14 +29,6 @@ public class DisplayMapActivity extends AppCompatActivity {
 
         String locationXmessage = mView.getLx();
         String locationYmessage = mView.getLy();
-        // Send location x, y
-        //if (mView.mTouches.size() > 0) {
-            /*locationXmessage = String.valueOf(mView.mTouches.valueAt(0).x);
-            locationYmessage = String.valueOf(mView.mTouches.valueAt(0).y);
-        } else {*/
-         //   locationXmessage = "Fuck";
-         //   locationYmessage = "You";
-        //}
         intent.putExtra(EXTRA_MESSAGE1, locationXmessage);
         intent.putExtra(EXTRA_MESSAGE2, locationYmessage);
         setResult(MainActivity.RESULT_OK, intent);

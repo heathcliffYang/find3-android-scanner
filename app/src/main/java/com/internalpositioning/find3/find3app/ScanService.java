@@ -67,6 +67,7 @@ public class ScanService extends Service {
     private String familyName = "";
 
     // change locationName to variables, x and y.
+    private String locationName = "";
     private String locationX = "";
     private String locationY = "";
 
@@ -109,6 +110,7 @@ public class ScanService extends Service {
         familyName = intent.getStringExtra("familyName");
 
         // change locationName
+        locationName = intent.getStringExtra("locationName");
         locationX = intent.getStringExtra("locationX");
         locationY = intent.getStringExtra("locationY");
 
@@ -304,6 +306,7 @@ public class ScanService extends Service {
             jsonBody.put("d", deviceName);
 
             // change locationName to variables, x and y.
+            jsonBody.put("l", locationName);
             jsonBody.put("lx", locationX);
             jsonBody.put("ly", locationY);
 
